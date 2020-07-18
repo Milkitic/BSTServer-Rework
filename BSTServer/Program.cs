@@ -21,7 +21,7 @@ namespace BSTServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                        .UseUrls("http://*:27001", "https://*:27000")
+                        .UseUrls("http://*:27001"/*, "https://*:27000"*/)
                         .UseStartup<Startup>();
                 });
     }

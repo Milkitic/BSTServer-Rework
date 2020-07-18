@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BSTServer.Models;
+﻿using BSTServer.Models;
 using BSTServer.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BSTServer.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = UserRoles.Admin + "," +
+                       UserRoles.Root)]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -37,8 +35,18 @@ namespace BSTServer.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            var s = User;
             var users = await _userService.GetAll();
-            return Ok(users);
+            return Ok(new
+            {
+                users = users,
+                principal = User.Identities.Select(k => new
+                {
+                    k.Name,
+                    k.AuthenticationType,
+                    claims = k.Claims.ToDictionary(o => o.Type, o => o.Value)
+                })
+            });
         }
     }
 }

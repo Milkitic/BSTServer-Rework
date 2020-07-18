@@ -40,6 +40,12 @@ namespace BSTServer
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("admin", policy => policy.RequireRole("admin"));
+            //}); // Policy方式权限验证
+
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
@@ -77,7 +83,7 @@ namespace BSTServer
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

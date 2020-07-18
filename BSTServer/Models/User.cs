@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BSTServer.Models
 {
+    [Table("users")]
     public class User
     {
         [Key]
@@ -10,11 +12,13 @@ namespace BSTServer.Models
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }
-        public UserRole Role { get; set; }
+        public string Role { get; set; }
     }
 
-    public enum UserRole
+    public static class UserRoles
     {
-        Root, Admin, User
+        public const string Root = "ROOT";
+        public const string Admin = "ADMIN";
+        public const string User = "USER";
     }
 }
