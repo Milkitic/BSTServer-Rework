@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSTServer", "BSTServer\BSTServer.csproj", "{5B11709F-335E-46F1-848C-209BAF7E7CE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BSTServer", "BSTServer\BSTServer.csproj", "{5B11709F-335E-46F1-848C-209BAF7E7CE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSTServer.Hosting", "BSTServer.Hosting\BSTServer.Hosting.csproj", "{555A939A-7B34-44E9-8E0C-4E575C7CE77C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegexTest", "RegexTest\RegexTest.csproj", "{F113FF1A-8D4B-4AF9-8F8B-33B0F9941C89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{5B11709F-335E-46F1-848C-209BAF7E7CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B11709F-335E-46F1-848C-209BAF7E7CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B11709F-335E-46F1-848C-209BAF7E7CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{555A939A-7B34-44E9-8E0C-4E575C7CE77C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{555A939A-7B34-44E9-8E0C-4E575C7CE77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{555A939A-7B34-44E9-8E0C-4E575C7CE77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{555A939A-7B34-44E9-8E0C-4E575C7CE77C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F113FF1A-8D4B-4AF9-8F8B-33B0F9941C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F113FF1A-8D4B-4AF9-8F8B-33B0F9941C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F113FF1A-8D4B-4AF9-8F8B-33B0F9941C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F113FF1A-8D4B-4AF9-8F8B-33B0F9941C89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
