@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace BstServer.Models
 {
     public class SteamUserSession
     {
-        public Guid Id { get; set; }
+        [Key]
         public Guid SessionId { get; set; }
         public string SteamId { get; set; }
         public DateTimeOffset? ConnectTime { get; set; }

@@ -5,7 +5,7 @@ namespace BSTServer.Hosting
     public class ConnectInfo
     {
         public DateTime Timestamp { get; set; }
-        public string Username { get; set; }
+        public string Nickname { get; set; }
         public int EntityId { get; set; }
         public string SteamId { get; set; }
         public string PlayerStatus { get; set; }

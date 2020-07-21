@@ -12,6 +12,8 @@ namespace BstServer.Models
         public Guid SessionId { get; set; }
         public DateTimeOffset DamageTime { get; set; }
         public bool IsHurt { get; set; }
+        public int Damage { get; set; }
+        public string Weapon { get; set; }
 
         [JsonIgnore]
         public SteamUser SteamUser { get; set; }
