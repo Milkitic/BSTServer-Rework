@@ -17,7 +17,7 @@ namespace BSTServer.Hosting
                 Result = new ConnectInfo()
                 {
                     Timestamp = DateTime.Parse($"{result.Groups[1].Value} {result.Groups[2].Value}"),
-                    Username = result.Groups[3].Value,
+                    Nickname = result.Groups[3].Value,
                     EntityId = int.Parse(result.Groups[4].Value),
                     SteamId = result.Groups[5].Value,
                     PlayerStatus = result.Groups[6].Value,
@@ -43,7 +43,7 @@ namespace BSTServer.Hosting
                 Result = new DisconnectInfo()
                 {
                     Timestamp = DateTime.Parse($"{result.Groups[1].Value} {result.Groups[2].Value}"),
-                    Username = result.Groups[3].Value,
+                    Nickname = result.Groups[3].Value,
                     EntityId = int.Parse(result.Groups[4].Value),
                     SteamId = result.Groups[5].Value,
                     PlayerStatus = result.Groups[6].Value,

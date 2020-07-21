@@ -8,7 +8,7 @@ namespace BstServer.Models
         [Key]
         public string SteamId { get; set; }
 
-        public string NickName { get; set; }
+        public string Nickname { get; set; }
 
         public bool IsOnline { get; set; }
 

@@ -29,7 +29,7 @@ namespace BSTServer.Data
             return user;
         }
 
-        public async Task<SteamUserSession> GetSessionById(string steamId, Guid sessionId)
+        public async Task<SteamUserSession> GetSteamUserSessionById(string steamId, Guid sessionId)
         {
             var user = (await SteamUsers.FirstOrDefaultAsync(k => k.SteamId == steamId)).UserSessions
                 .FirstOrDefault(k => k.SessionId == sessionId);
