@@ -20,7 +20,7 @@ namespace BSTServer.Hosting
         private CancellationTokenSource _cts;
         private ConcurrentQueue<string> _queue = new ConcurrentQueue<string>();
 
-        private readonly Dictionary<string, SteamUserSession> _users = new Dictionary<string, SteamUserSession>();
+        private readonly Dictionary<string, Session> _users = new Dictionary<string, Session>();
 
         public L4D2AppHost(ApplicationDbContext dbContext)
         {
@@ -88,24 +88,24 @@ namespace BSTServer.Hosting
             var result = obj.Result;
             var attackerSession = await _dbContext.GetSteamUserCurrentSession(result.AttackerSteamIdOrBot);
             var injurerSession = await _dbContext.GetSteamUserCurrentSession(result.InjuredSteamIdOrBot);
-            attackerSession?.UserDamages?.Add(new SteamUserDamage
+            attackerSession?.UserDamages?.Add(new SessionDamage
             {
                 DamageTime = DateTimeOffset.Now,
-                Id = Guid.NewGuid(),
+                SessionDamageId = Guid.NewGuid(),
                 IsHurt = false,
                 SessionId = attackerSession.SessionId,
-                SteamId = attackerSession.SteamId,
+                SteamUserId = attackerSession.SteamUserId,
                 Weapon = result.Weapon,
                 Damage = result.Damage
             });
 
-            injurerSession?.UserDamages?.Add(new SteamUserDamage
+            injurerSession?.UserDamages?.Add(new SessionDamage
             {
                 DamageTime = DateTimeOffset.Now,
-                Id = Guid.NewGuid(),
+                SessionDamageId = Guid.NewGuid(),
                 IsHurt = true,
                 SessionId = injurerSession.SessionId,
-                SteamId = injurerSession.SteamId,
+                SteamUserId = injurerSession.SteamUserId,
                 Weapon = result.Weapon,
                 Damage = result.Damage
             });
@@ -122,26 +122,26 @@ namespace BSTServer.Hosting
             obj.Match(source);
             if (!obj.Success) return false;
             var result = obj.Result;
-            var exists = _dbContext.SteamUsers.AsNoTracking().Any(k => k.SteamId == result.SteamId);
-            var steamUserSession = new SteamUserSession()
+            var exists = _dbContext.SteamUsers.AsNoTracking().Any(k => k.SteamUserId == result.SteamId);
+            var steamUserSession = new Session()
             {
                 SessionId = Guid.NewGuid(),
                 ConnectTime = result.Timestamp,
-                SteamId = result.SteamId
+                SteamUserId = result.SteamId
             };
             if (exists)
             {
-                var steamUser = await _dbContext.SteamUsers.FirstAsync(k => k.SteamId == result.SteamId);
+                var steamUser = await _dbContext.SteamUsers.FirstAsync(k => k.SteamUserId == result.SteamId);
                 steamUser.Nickname = result.Nickname;
                 steamUser.IsOnline = true;
-                steamUser.UserSessions.Add(steamUserSession);
+                steamUser.Sessions.Add(steamUserSession);
             }
             else
             {
                 await _dbContext.SteamUsers.AddAsync(new SteamUser
                 {
-                    UserSessions = { steamUserSession },
-                    SteamId = result.SteamId,
+                    Sessions = { steamUserSession },
+                    SteamUserId = result.SteamId,
                     IsOnline = true,
                     Nickname = result.Nickname
                 });

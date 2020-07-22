@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BstServer.Models
 {
-    public class SteamUserDamage
+    public class SessionDamage
     {
         [Key]
-        public Guid Id { get; set; }
-        public string SteamId { get; set; }
+        public Guid SessionDamageId { get; set; }
         public Guid SessionId { get; set; }
+        public string SteamUserId { get; set; }
         public DateTimeOffset DamageTime { get; set; }
         public bool IsHurt { get; set; }
         public int Damage { get; set; }
@@ -19,6 +19,6 @@ namespace BstServer.Models
         public SteamUser SteamUser { get; set; }
 
         [JsonIgnore]
-        public SteamUserSession SteamUserSession { get; set; }
+        public Session Session { get; set; }
     }
 }

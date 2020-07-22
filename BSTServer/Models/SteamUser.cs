@@ -6,12 +6,12 @@ namespace BstServer.Models
     public class SteamUser
     {
         [Key]
-        public string SteamId { get; set; }
+        public string SteamUserId { get; set; }
 
         public string Nickname { get; set; }
 
         public bool IsOnline { get; set; }
 
-        public List<SteamUserSession> UserSessions { get; } = new List<SteamUserSession>();
+        public List<Session> Sessions { get; } = new List<Session>();
     }
 }

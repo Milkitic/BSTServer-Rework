@@ -5,16 +5,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BstServer.Models
 {
-    public class SteamUserSession
+    public class Session
     {
         [Key]
         public Guid SessionId { get; set; }
-        public string SteamId { get; set; }
+        public string SteamUserId { get; set; }
         public DateTimeOffset? ConnectTime { get; set; }
 
         public DateTimeOffset? DisconnectTime { get; set; }
 
-        public List<SteamUserDamage> UserDamages { get; } = new List<SteamUserDamage>();
+        public List<SessionDamage> UserDamages { get; } = new List<SessionDamage>();
 
         [JsonIgnore]
         public SteamUser SteamUser { get; set; }

@@ -25,28 +25,28 @@ namespace BSTServer.Data
 
         public async Task<SteamUser> GetSteamUserBySteamId(string steamId)
         {
-            var user = await SteamUsers.FirstOrDefaultAsync(k => k.SteamId == steamId);
+            var user = await SteamUsers.FirstOrDefaultAsync(k => k.SteamUserId == steamId);
             return user;
         }
 
-        public async Task<SteamUserSession> GetSteamUserSessionById(string steamId, Guid sessionId)
+        public async Task<Session> GetSteamUserSessionById(string steamId, Guid sessionId)
         {
-            var user = (await SteamUsers.FirstOrDefaultAsync(k => k.SteamId == steamId)).UserSessions
+            var user = (await SteamUsers.FirstOrDefaultAsync(k => k.SteamUserId == steamId)).Sessions
                 .FirstOrDefault(k => k.SessionId == sessionId);
             return user;
         }
 
-        public async Task<SteamUserSession> GetSessionByTime(string steamId, DateTime time)
+        public async Task<Session> GetSessionByTime(string steamId, DateTime time)
         {
-            var user = (await SteamUsers.FirstOrDefaultAsync(k => k.SteamId == steamId)).UserSessions
+            var user = (await SteamUsers.FirstOrDefaultAsync(k => k.SteamUserId == steamId)).Sessions
                 .FirstOrDefault(k => k.ConnectTime <= time && k.DisconnectTime >= time);
             return user;
         }
 
-        public async Task<SteamUserSession> GetSteamUserCurrentSession(string steamId)
+        public async Task<Session> GetSteamUserCurrentSession(string steamId)
         {
             var now = DateTime.Now;
-            var user = (await SteamUsers.FirstOrDefaultAsync(k => k.SteamId == steamId)).UserSessions
+            var user = (await SteamUsers.FirstOrDefaultAsync(k => k.SteamUserId == steamId)).Sessions
                 .FirstOrDefault(k => k.ConnectTime <= now && k.DisconnectTime >= now);
             return user;
         }
