@@ -8,6 +8,6 @@ namespace BSTServer.Models
         public string Username { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public string Md5Password { get; set; }
     }
 }

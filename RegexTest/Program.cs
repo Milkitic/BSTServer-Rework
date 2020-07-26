@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BSTServer;
+using System;
 using System.Text.RegularExpressions;
 
 namespace RegexTest
@@ -11,6 +12,10 @@ namespace RegexTest
             new Regex(@"L (.+) - (.+): \[l4d_ff_tracker.smx\] (.+) => (.+) \[(.+)\] \[(.+) DMG\]");
         static void Main(string[] args)
         {
+            var dateTime = DateTime.Now;
+            var str = EasyInviteCode.Generate("milkitic", dateTime);
+            var success = EasyInviteCode.ConvertBack(str);
+
             var connectRegex = new ConnectRegexObj();
             connectRegex.Match(
                 "L 07/19/2020 - 17:48:37: \"CPU 0<1774><STEAM_1:0:138017978><>\" connected, address \"112.64.0.74:6785\"");

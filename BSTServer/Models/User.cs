@@ -13,6 +13,7 @@ namespace BSTServer.Models
         [Required]
         public string Password { get; set; }
         public string Role { get; set; }
+        public string InviteCodes { get; set; }
     }
 
     public static class UserRoles

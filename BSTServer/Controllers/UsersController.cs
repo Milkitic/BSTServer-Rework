@@ -24,7 +24,7 @@ namespace BSTServer.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel model)
         {
-            var user = await _userService.Authenticate(model.Username, model.Password);
+            var user = await _userService.Authenticate(model.Username, model.Md5Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
