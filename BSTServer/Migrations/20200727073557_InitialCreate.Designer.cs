@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BSTServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200722063918_InitialCreate")]
+    [Migration("20200727073557_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,9 @@ namespace BSTServer.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("InviteCodes")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -38,6 +41,16 @@ namespace BSTServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            InviteCodes = "CMMX&XChQMrhCXrnbCbbM",
+                            Password = "598FE0170EA351B58CBEB10DDEFE7D44",
+                            Role = "ROOT",
+                            Username = "root"
+                        });
                 });
 
             modelBuilder.Entity("BstServer.Models.Session", b =>

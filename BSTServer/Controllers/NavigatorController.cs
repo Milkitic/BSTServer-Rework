@@ -1,23 +1,41 @@
-﻿using System;
+﻿using BSTServer.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BSTServer.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class NavigatorController : ControllerBase
+    public class NavigatorController : JsonController
     {
         // GET: api/Navigator
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var claim = User.Claims.First(k => k.Type == ClaimTypes.Role);
+            switch (claim.Value)
+            {
+                case UserRoles.User:
+                    return Ok("user!");
+                case UserRoles.Admin:
+                    return Ok("admin!");
+                case UserRoles.Root:
+                    return Ok(new NavObj()
+                    {
+                        Sections = new List<SectionObj>()
+                        {
+                            SectionObj.CreateGeneral(ItemObj.Dashboard, ItemObj.Statistics),
+                            SectionObj.CreateManagement(ItemObj.Server, ItemObj.Files, ItemObj.Users)
+                        }
+                    });
+                default:
+                    return BadRequest("unknown user role!");
+            }
         }
 
         // GET: api/Navigator/5

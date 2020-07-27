@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BSTServer.Hosting.HostingBase
@@ -106,7 +107,7 @@ namespace BSTServer.Hosting.HostingBase
             _processInstance.BeginOutputReadLine();
             _processInstance.BeginErrorReadLine();
             InstanceGuid = Guid.NewGuid();
-            OnStarted();
+            await OnStarted();
 
             Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] Process \"{_processInstance.ProcessName}\" started.");
         }
@@ -134,7 +135,8 @@ namespace BSTServer.Hosting.HostingBase
             if (_processInstance == null) return;
             if (_processInstance.HasExited) return;
 
-            if (await _processInstance.CloseMainWindowAsync())
+            var cts = new CancellationTokenSource(killTimeout);
+            if (await _processInstance.CloseMainWindowAsync(cts.Token))
             {
                 if (!_processInstance.WaitForExit(killTimeout))
                 {
@@ -143,7 +145,7 @@ namespace BSTServer.Hosting.HostingBase
             }
             else if (await CloseGracefully())
             {
-                if (!_processInstance.WaitForExit(killTimeout))
+                if (!(await _processInstance.WaitForExitAsync(cts.Token)))
                 {
                     await _processInstance.KillAsync();
                 }

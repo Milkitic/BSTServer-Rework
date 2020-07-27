@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -176,31 +175,31 @@ namespace BSTServer.Hosting
             return true;
         }
 
-        protected override async Task<bool> CloseGracefully()
+        protected override Task<bool> CloseGracefully()
         {
             if (HostSettings.InputEnabled)
             {
+                //ProcessExited += OnProcessExited;
+                SendMessage($"quit{Environment.NewLine}");
+                return Task.FromResult(true);
+                //bool quit = false;
+                //Stopwatch sw = Stopwatch.StartNew();
+                //while (sw.ElapsedMilliseconds < 8000)
+                //{
+                //    if (quit) break;
+                //    await Task.Delay(10);
+                //}
 
-                ProcessExited += OnProcessExited;
-                SendMessage("quit" + Environment.NewLine);
-                bool quit = false;
-                Stopwatch sw = Stopwatch.StartNew();
-                while (sw.ElapsedMilliseconds < 8000)
-                {
-                    if (quit) break;
-                    await Task.Delay(10);
-                }
+                //return quit;
 
-                return quit;
-
-                void OnProcessExited()
-                {
-                    quit = true;
-                    ProcessExited -= OnProcessExited;
-                }
+                //void OnProcessExited()
+                //{
+                //    quit = true;
+                //    ProcessExited -= OnProcessExited;
+                //}
             }
 
-            return false;
+            return Task.FromResult(false);
         }
     }
 }

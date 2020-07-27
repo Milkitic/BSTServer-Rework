@@ -1,13 +1,13 @@
-﻿using System;
+﻿using BSTServer.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BSTServer.Models;
 
 namespace BSTServer.Services
 {
     public interface IUserService
     {
-        Task<User> Authenticate(string username, string md5Pass);
+        Task<User> Authenticate(string username, string password);
         Task<IEnumerable<User>> GetAll();
+        Task AddUser(SignUpModel signUpModel);
     }
 }

@@ -11,9 +11,10 @@ namespace BSTServer.Controllers
                        UserRoles.Root)]
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : JsonController
     {
         private IUserService _userService;
+        //private CaptchaService _captchaService;
 
         public UsersController(IUserService userService)
         {
@@ -22,18 +23,47 @@ namespace BSTServer.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel model)
+        public async Task<IActionResult> Authenticate([FromBody] AuthenticateModel model)
         {
-            var user = await _userService.Authenticate(model.Username, model.Md5Password);
+            var user = await _userService.Authenticate(model.Username, model.Password);
 
             if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+            {
+                //_captchaService.Count(Request.Headers["Identity"]);
+                return BadRequest("Username or password is incorrect");
+            }
 
-            return Ok(user);
+            return Ok(new
+            {
+                user,
+                principal = User.Identities.Select(k => new
+                {
+                    k.Name,
+                    k.AuthenticationType,
+                    claims = k.Claims.ToDictionary(o => o.Type, o => o.Value)
+                })
+            });
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> GetCaptcha()
+        //{
+        //    var head
+        //    var s = User;
+        //    //var users = await _userService.GetAll();
+        //    //return Ok(new
+        //    //{
+        //    //    users = users,
+        //    //    principal = User.Identities.Select(k => new
+        //    //    {
+        //    //        k.Name,
+        //    //        k.AuthenticationType,
+        //    //        claims = k.Claims.ToDictionary(o => o.Type, o => o.Value)
+        //    //    })
+        //    //});
+        //}
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllUsers()
         {
             var s = User;
             var users = await _userService.GetAll();
@@ -46,6 +76,44 @@ namespace BSTServer.Controllers
                     k.AuthenticationType,
                     claims = k.Claims.ToDictionary(o => o.Type, o => o.Value)
                 })
+            });
+        }
+    }
+
+    public class JsonController : ControllerBase
+    {
+        public BadRequestObjectResult BadRequest(string message)
+        {
+            return BadRequest(message, null);
+        }
+        public BadRequestObjectResult BadRequest(string message, object data)
+        {
+            return base.BadRequest(new
+            {
+                code = 400,
+                message = message,
+                data = data
+            });
+        }
+
+        public OkObjectResult PartialOk(string message, object data)
+        {
+            return base.Ok(new
+            {
+                code = 202,
+                message = message,
+                data = data
+            });
+        }
+
+        /// <inheritdoc />
+        public override OkObjectResult Ok(object data)
+        {
+            return base.Ok(new
+            {
+                code = 200,
+                message = (string)null,
+                data = data
             });
         }
     }

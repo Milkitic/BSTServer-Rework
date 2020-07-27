@@ -9,9 +9,9 @@ namespace BSTServer.Hosting.HostingBase
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
-        public bool FixEnvironmentDirectory { get; set; } = false;
+        public bool FixEnvironmentDirectory { get; set; } = true;
+        public bool InputEnabled { get; set; } = true;
         public bool ShowWindow { get; set; } = false;
-        public bool InputEnabled { get; set; } = false;
 
         public Encoding Encoding { get; set; } = Encoding.UTF8;
     }

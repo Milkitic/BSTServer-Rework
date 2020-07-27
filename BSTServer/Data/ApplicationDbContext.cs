@@ -1,5 +1,6 @@
 ﻿using BstServer.Models;
 using BSTServer.Models;
+using BSTServer.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -15,6 +16,19 @@ namespace BSTServer.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = 1,
+                Password = UserService.GetSaltedPass("r00t@bst123"),
+                Username = "root",
+                Role = UserRoles.Root,
+                InviteCodes = string.Join('|', EasyInviteCode.Generate("root", DateTime.Now.AddDays(7)))
+            });
         }
 
         public async Task InsertUserAsync(User user)

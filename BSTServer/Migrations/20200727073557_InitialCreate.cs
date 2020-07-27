@@ -28,7 +28,8 @@ namespace BSTServer.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Username = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
-                    Role = table.Column<string>(nullable: true)
+                    Role = table.Column<string>(nullable: true),
+                    InviteCodes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,6 +84,11 @@ namespace BSTServer.Migrations
                         principalColumn: "SteamUserId",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "Id", "InviteCodes", "Password", "Role", "Username" },
+                values: new object[] { 1, "CMMX&XChQMrhCXrnbCbbM", "598FE0170EA351B58CBEB10DDEFE7D44", "ROOT", "root" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Session_SteamUserId",

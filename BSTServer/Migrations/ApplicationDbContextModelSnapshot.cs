@@ -22,6 +22,9 @@ namespace BSTServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("InviteCodes")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -36,6 +39,16 @@ namespace BSTServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            InviteCodes = "CMMX&XChQMrhCXrnbCbbM",
+                            Password = "598FE0170EA351B58CBEB10DDEFE7D44",
+                            Role = "ROOT",
+                            Username = "root"
+                        });
                 });
 
             modelBuilder.Entity("BstServer.Models.Session", b =>
