@@ -7,22 +7,21 @@ using System.Threading.Tasks;
 
 namespace BSTServer.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin + "," +
-                       UserRoles.Root)]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : JsonController
+    public class AuthenticateController : JsonController
     {
         private IUserService _userService;
         //private CaptchaService _captchaService;
 
-        public UsersController(IUserService userService)
+        public AuthenticateController(IUserService userService)
         {
             _userService = userService;
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
+        [HttpPost]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateModel model)
         {
             var user = await _userService.Authenticate(model.Username, model.Password);
@@ -45,6 +44,12 @@ namespace BSTServer.Controllers
             });
         }
 
+        [HttpGet("test")]
+        public async Task<IActionResult> Test()
+        {
+            return Ok();
+        }
+
         //[HttpGet]
         //public async Task<IActionResult> GetCaptcha()
         //{
@@ -62,22 +67,22 @@ namespace BSTServer.Controllers
         //    //    })
         //    //});
         //}
-        [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            var s = User;
-            var users = await _userService.GetAll();
-            return Ok(new
-            {
-                users = users,
-                principal = User.Identities.Select(k => new
-                {
-                    k.Name,
-                    k.AuthenticationType,
-                    claims = k.Claims.ToDictionary(o => o.Type, o => o.Value)
-                })
-            });
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllUsers()
+        //{
+        //    var s = User;
+        //    var users = await _userService.GetAll();
+        //    return Ok(new
+        //    {
+        //        users = users,
+        //        principal = User.Identities.Select(k => new
+        //        {
+        //            k.Name,
+        //            k.AuthenticationType,
+        //            claims = k.Claims.ToDictionary(o => o.Type, o => o.Value)
+        //        })
+        //    });
+        //}
     }
 
     public class JsonController : ControllerBase

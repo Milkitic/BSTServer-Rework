@@ -1,22 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BSTServer.Authentication;
 using BSTServer.Data;
+using BSTServer.Explorer;
 using BSTServer.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace BSTServer
 {
@@ -67,6 +63,26 @@ namespace BSTServer
             }
 
             services.AddScoped<IUserService, UserService>();
+            services.AddSingleton(service =>
+            {
+                var fileExplorer = new FileExplorer();
+                fileExplorer.InitializeHomeDirectory(new Uri("E:\\milkitic"));
+                return fileExplorer;
+            });
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext =>
+                {
+                    return new BadRequestObjectResult(new
+                    {
+                        code = 400.1,
+                        message = "字段验证错误",
+                        data = actionContext.ModelState.ToDictionary(k => k.Key,
+                            k => string.Join(";", k.Value.Errors.Select(o => o.ErrorMessage)))
+                    });
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

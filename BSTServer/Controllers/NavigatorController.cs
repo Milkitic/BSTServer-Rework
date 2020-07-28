@@ -21,9 +21,16 @@ namespace BSTServer.Controllers
             switch (claim.Value)
             {
                 case UserRoles.User:
-                    return Ok("user!");
+                    return Ok("user!!");
                 case UserRoles.Admin:
-                    return Ok("admin!");
+                    return Ok(new NavObj()
+                    {
+                        Sections = new List<SectionObj>()
+                        {
+                            SectionObj.CreateGeneral(ItemObj.Dashboard, ItemObj.Statistics),
+                            SectionObj.CreateManagement(ItemObj.Server, ItemObj.Files, ItemObj.Users)
+                        }
+                    });
                 case UserRoles.Root:
                     return Ok(new NavObj()
                     {

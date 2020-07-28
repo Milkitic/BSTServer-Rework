@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BSTServer.Explorer\BSTServer.Explorer.csproj" />
     <ProjectReference Include="..\BSTServer.Hosting\BSTServer.Hosting.csproj" />
   </ItemGroup>
 
