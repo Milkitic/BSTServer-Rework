@@ -28,6 +28,8 @@ namespace BSTServer.Explorer
         public DirectoryObject GetTargetDirectoryInfo(string userRole, string userName, params string[] relativePath)
         {
             if (!_initialized) throw new Exception("Home directory is not initialized.");
+            if (relativePath?.Contains("..") == true)
+                throw new UriFormatException("Relative path is not supported");
             var targetPath = Path.Combine(new[] { _homeDirectory.FullName }.Concat(relativePath ?? new string[] { }).ToArray());
             targetPath = new DirectoryInfo(targetPath).FullName;
             if (!Directory.Exists(targetPath))
@@ -52,13 +54,15 @@ namespace BSTServer.Explorer
                 RelativePath = GetRelativePathString(k.FullName),
                 CreationTime = k.CreationTime,
                 LastAccessTime = k.LastAccessTime,
-                LastWriteTime = k.LastWriteTime
+                LastWriteTime = k.LastWriteTime,
+                Size = k.Length,
             });
 
             return new DirectoryObject()
             {
                 Directories = directories.ToList(),
-                Files = files.ToList()
+                Files = files.ToList(),
+                RelativePath = GetRelativePathString(targetPath)
             };
         }
 
@@ -98,6 +102,7 @@ namespace BSTServer.Explorer
         public bool CanCreateFiles { get; set; } = true;
         public List<DirectoryDesc> Directories { get; set; } = new List<DirectoryDesc>();
         public List<FileDesc> Files { get; set; } = new List<FileDesc>();
+        public string RelativePath { get; set; }
     }
 
     public class ExplorerDesc
@@ -114,6 +119,8 @@ namespace BSTServer.Explorer
         public bool CanDisable { get; set; } = true;
         public bool CanDelete { get; set; } = true;
         public bool CanEdit { get; set; } = true;
+        public long Size { get; set; }
+        public bool IsEnabled { get; set; } = true;
     }
 
     public class DirectoryDesc : ExplorerDesc

@@ -1,10 +1,13 @@
 ﻿using BSTServer.Explorer;
+using BSTServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using UploadStream;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,16 +43,61 @@ namespace BSTServer.Controllers
         }
 
         // GET api/<ExplorerController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
 
         // POST api/<ExplorerController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("upload")]
+        [AllowAnonymous]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> Post()
         {
+            try
+            {
+                // returns a generic typed model, alternatively non-generic overload if no model binding is required
+                UploadModel model = await this.StreamFiles<UploadModel>(async formFile =>
+                {
+                    var buffer = new byte[4096];
+                    int i = 0;
+                    // implement processing of stream as required via an IFormFile interface
+                    var createdFile = Path.Combine("e:\\" + formFile.FileName);
+
+                    //using (var readStream = formFile.OpenReadStream())
+                    using (var stream = new FileStream(createdFile, FileMode.Create))
+                    {
+                        //int bytesRead;
+                        //do
+                        //{
+                        //    bytesRead = await readStream.ReadAsync(buffer, 0, buffer.Length);
+                        //    stream.Write(buffer);
+                        //    buffer = new byte[4096];
+                        //    //i += 40196; bytesRead;
+                        //} while (bytesRead != 0);
+                        await formFile.CopyToAsync(stream);
+                    }
+                });
+                // ModelState is still validated from model
+                if (!ModelState.IsValid)
+                {
+
+
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "Null encoding")
+                {
+                    return BadRequest("未选择上传文件");
+                }
+
+                return BadRequest(ex.Message);
+                throw;
+            }
+
         }
 
         // PUT api/<ExplorerController>/5

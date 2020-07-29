@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace BSTServer
 {
@@ -66,7 +67,7 @@ namespace BSTServer
             services.AddSingleton(service =>
             {
                 var fileExplorer = new FileExplorer();
-                fileExplorer.InitializeHomeDirectory(new Uri("E:\\milkitic"));
+                fileExplorer.InitializeHomeDirectory(new Uri(@"E:\milkitic\source\GitHub\BSTServer-Rework"));
                 return fileExplorer;
             });
 
@@ -82,6 +83,13 @@ namespace BSTServer
                             k => string.Join(";", k.Value.Errors.Select(o => o.ErrorMessage)))
                     });
                 };
+            });
+
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = long.MaxValue;
+                x.MultipartHeadersLengthLimit = int.MaxValue;
             });
         }
 
