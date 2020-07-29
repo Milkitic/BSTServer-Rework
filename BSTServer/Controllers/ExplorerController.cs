@@ -52,7 +52,8 @@ namespace BSTServer.Controllers
         // POST api/<ExplorerController>
         [HttpPost("upload")]
         [AllowAnonymous]
-        [DisableRequestSizeLimit]
+        //[DisableRequestSizeLimit]
+        [RequestSizeLimit(long.MaxValue)]
         public async Task<IActionResult> Post()
         {
             try
@@ -63,19 +64,11 @@ namespace BSTServer.Controllers
                     var buffer = new byte[4096];
                     int i = 0;
                     // implement processing of stream as required via an IFormFile interface
-                    var createdFile = Path.Combine("e:\\" + formFile.FileName);
+                    var createdFile = Path.Combine("e:\\test\\" + formFile.FileName);
 
                     //using (var readStream = formFile.OpenReadStream())
                     using (var stream = new FileStream(createdFile, FileMode.Create))
                     {
-                        //int bytesRead;
-                        //do
-                        //{
-                        //    bytesRead = await readStream.ReadAsync(buffer, 0, buffer.Length);
-                        //    stream.Write(buffer);
-                        //    buffer = new byte[4096];
-                        //    //i += 40196; bytesRead;
-                        //} while (bytesRead != 0);
                         await formFile.CopyToAsync(stream);
                     }
                 });
