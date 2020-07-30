@@ -87,10 +87,13 @@ namespace BSTServer.Controllers
 
     public class JsonController : ControllerBase
     {
+        [NonAction]
         public BadRequestObjectResult BadRequest(string message)
         {
             return BadRequest(message, null);
         }
+
+        [NonAction]
         public BadRequestObjectResult BadRequest(string message, object data)
         {
             return base.BadRequest(new
@@ -101,6 +104,7 @@ namespace BSTServer.Controllers
             });
         }
 
+        [NonAction]
         public OkObjectResult PartialOk(string message, object data)
         {
             return base.Ok(new
@@ -112,6 +116,7 @@ namespace BSTServer.Controllers
         }
 
         /// <inheritdoc />
+        [NonAction]
         public override OkObjectResult Ok(object data)
         {
             return base.Ok(new

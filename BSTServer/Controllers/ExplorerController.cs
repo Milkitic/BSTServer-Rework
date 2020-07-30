@@ -42,18 +42,11 @@ namespace BSTServer.Controllers
             }
         }
 
-        // GET api/<ExplorerController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
         // POST api/<ExplorerController>
         [HttpPost("upload")]
-        [AllowAnonymous]
-        //[DisableRequestSizeLimit]
         [RequestSizeLimit(long.MaxValue)]
+        [AllowAnonymous]
+        [RequestFormLimits(BufferBody = true)]
         public async Task<IActionResult> Post()
         {
             try
@@ -61,16 +54,46 @@ namespace BSTServer.Controllers
                 // returns a generic typed model, alternatively non-generic overload if no model binding is required
                 UploadModel model = await this.StreamFiles<UploadModel>(async formFile =>
                 {
-                    var buffer = new byte[4096];
-                    int i = 0;
-                    // implement processing of stream as required via an IFormFile interface
-                    var createdFile = Path.Combine("e:\\test\\" + formFile.FileName);
+                    var fixedFilename = Path.GetFileName(formFile.FileName);
 
-                    //using (var readStream = formFile.OpenReadStream())
-                    using (var stream = new FileStream(createdFile, FileMode.Create))
+                    string[] supportedExt = { ".vpk", ".zip" };
+                    string ext = Path.GetExtension(fixedFilename);
+                    if (!supportedExt.Contains(ext, StringComparer.OrdinalIgnoreCase))
+                    {
+                        throw new NotSupportedException($"File type \"{ext}\" is not supported.");
+                    }
+
+                    char[] reverseChar = Path.GetInvalidFileNameChars().Union(Path.GetInvalidPathChars()).ToArray();
+                    if (fixedFilename?.Any(c => c > 127 && c < 32) != false ||
+                        fixedFilename.Any(c => reverseChar.Contains(c)))
+                    {
+                        throw new NotSupportedException("File name is invalid. Should be characters or system-support path symbols.");
+                    }
+
+                    var fileName = Guid.NewGuid() + "_" + fixedFilename;
+                    Console.WriteLine("get: " + fileName);
+                    // implement processing of stream as required via an IFormFile interface
+                    var testDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "testFiles");
+                    if (!Directory.Exists(testDir)) Directory.CreateDirectory(testDir);
+                    var createdFile = Path.Combine(testDir, fileName);
+
+                    //var buffer = new byte[4096];
+                    //int i = 0;
+                    //await using var fileStream = new FileStream(createdFile, FileMode.Create, FileAccess.Write);
+                    //int bytesRead;
+                    //var readStream = formFile.OpenReadStream();
+                    //while ((bytesRead = await readStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                    //{
+                    //    await fileStream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                    //    buffer = new byte[4096];
+                    //}
+
+                    await using (var stream = new FileStream(createdFile, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);
                     }
+
+                    Console.WriteLine("write done: " + fileName);
                 });
                 // ModelState is still validated from model
                 if (!ModelState.IsValid)
@@ -82,15 +105,14 @@ namespace BSTServer.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 if (ex.Message == "Null encoding")
                 {
                     return BadRequest("未选择上传文件");
                 }
 
                 return BadRequest(ex.Message);
-                throw;
             }
-
         }
 
         // PUT api/<ExplorerController>/5

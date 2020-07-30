@@ -22,6 +22,8 @@ namespace BSTServer.Explorer
                 throw new DirectoryNotFoundException("Cannot find specified directory: " + stringPath);
 
             _homeDirectory = new DirectoryInfo(stringPath);
+
+            Console.WriteLine("Home directory initialized: " + _homeDirectory.FullName);
             _initialized = true;
         }
 

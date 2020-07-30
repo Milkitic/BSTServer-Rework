@@ -67,7 +67,12 @@ namespace BSTServer
             services.AddSingleton(service =>
             {
                 var fileExplorer = new FileExplorer();
-                fileExplorer.InitializeHomeDirectory(new Uri(@"E:\milkitic\source\GitHub\BSTServer-Rework"));
+                
+                string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
+                                                                          Environment.OSVersion.Platform == PlatformID.MacOSX)
+                    ? Environment.GetEnvironmentVariable("HOME")
+                    : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+                fileExplorer.InitializeHomeDirectory(new Uri(/*@"E:\milkitic\source\GitHub\BSTServer-Rework"*/homePath));
                 return fileExplorer;
             });
 
