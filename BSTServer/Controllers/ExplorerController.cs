@@ -33,7 +33,8 @@ namespace BSTServer.Controllers
             var userRole = User.Claims.FirstOrDefault(k => k.Type == ClaimTypes.Role);
             try
             {
-                var dir = _fileExplorer.GetTargetDirectoryInfo(userRole?.Value, userName?.Value, relativePath?.Split(splitChar));
+                var dir = _fileExplorer.GetTargetDirectoryInfo(userRole?.Value, userName?.Value,
+                    relativePath?.Split(splitChar));
                 return Ok(dir);
             }
             catch (Exception ex)
@@ -67,7 +68,8 @@ namespace BSTServer.Controllers
                     if (fixedFilename?.Any(c => c > 127 && c < 32) != false ||
                         fixedFilename.Any(c => reverseChar.Contains(c)))
                     {
-                        throw new NotSupportedException("File name is invalid. Should be characters or system-support path symbols.");
+                        throw new NotSupportedException(
+                            "File name is invalid. Should be characters or system-support path symbols.");
                     }
 
                     var fileName = Guid.NewGuid() + "_" + fixedFilename;
@@ -98,9 +100,8 @@ namespace BSTServer.Controllers
                 // ModelState is still validated from model
                 if (!ModelState.IsValid)
                 {
-
-
                 }
+
                 return Ok();
             }
             catch (Exception ex)
